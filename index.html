@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контингент СПО Санкт-Петербурга · 2019–2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#8891B4;
+    --paper:#9AA2C0;
+    --surface:#FFFFFF;
+    --ink:#161F38;
+    --ink-soft:#565F82;
+    --ink-faint:#8891AD;
+    --line:#B7BEd3;
+    --line-strong:#9CA5C0;
+
+    --total:#2A3F7C;
+    --total-soft:#E4E9F6;
+    --budget:#B8790C;
+    --budget-soft:#F7EBD6;
+    --contract:#106B66;
+    --contract-soft:#DCEEEC;
+    --target:#8A3260;
+    --target-soft:#F4E1EC;
+    --neutral:#6B7394;
+    --neutral-soft:#E9EBF3;
+
+    --pos:#1E7A46;
+    --neg:#B2402A;
+
+    --radius-s:6px;
+    --radius-m:10px;
+    --radius-l:16px;
+    --shadow: 0 1px 2px rgba(22,31,56,.08), 0 10px 28px -16px rgba(22,31,56,.30);
+    --serif: 'Times New Roman', Times, serif;
+    --sans: 'Times New Roman', Times, serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:var(--serif); font-weight:700; margin:0; color:var(--ink); }
+  p{ margin:0; }
+  .num{ font-variant-numeric: tabular-nums; }
+
+  .eyebrow{
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-faint); font-weight:700; font-family:var(--sans);
+  }
+
+  /* ===== HEADER / HERO ===== */
+  .hero{
+    position:relative;
+    background:
+      repeating-linear-gradient(180deg, rgba(22,31,56,.035) 0px, rgba(22,31,56,.035) 1px, transparent 1px, transparent 34px),
+      linear-gradient(180deg, #FFFFFF 0%, var(--paper) 100%);
+    border-bottom:1px solid var(--line);
+    padding:40px 32px 0;
+  }
+  .hero-inner{ max-width:1280px; margin:0 auto; }
+  .hero-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:24px;
+    flex-wrap:wrap; margin-bottom:28px;
+  }
+  .hero-title{ font-size:clamp(26px,3.2vw,38px); line-height:1.15; max-width:680px; }
+  .hero-sub{ margin-top:10px; color:var(--ink-soft); font-size:15px; max-width:560px; line-height:1.5; }
+
+  .stat-cards{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line-strong);
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-l) var(--radius-l) 0 0;
+    overflow:hidden;
+    transform:translateY(1px);
+  }
+  .stat-card{
+    background:var(--surface);
+    padding:22px 22px 20px;
+    position:relative;
+  }
+  .stat-card .tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--ink-faint); margin-bottom:14px;
+  }
+  .stat-card .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .stat-card .value{ font-family:var(--serif); font-size:32px; font-weight:700; line-height:1; }
+  .stat-card .sub{ margin-top:4px; font-size:13px; color:var(--ink-soft); }
+  .stat-card .delta{
+    margin-top:12px; display:inline-flex; align-items:center; gap:5px;
+    font-size:12.5px; font-weight:700; padding:3px 8px 3px 7px; border-radius:20px;
+  }
+  .delta.up{ color:var(--pos); background:#E5F3EA; }
+  .delta.down{ color:var(--neg); background:#FBE7E3; }
+  .stat-card .period{ font-size:11px; color:var(--ink-faint); margin-top:8px; }
+
+  /* ===== LAYOUT ===== */
+  .dashboard{
+    max-width:1280px; margin:0 auto;
+    padding:0 32px 64px;
+    display:grid;
+    grid-template-columns:236px 1fr;
+    gap:32px;
+    align-items:start;
+  }
+
+  /* ===== SIDEBAR / FILTERS ===== */
+  .filters{
+    position:sticky; top:20px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:0 0 var(--radius-l) var(--radius-l);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .filters-index{
+    background:var(--ink); color:#fff;
+    padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .filters-index .idx-label{
+    font-family:var(--serif); font-size:15px; font-weight:700; letter-spacing:.02em;
+  }
+  .filters-index .idx-num{ font-size:11px; color:#AEB7DA; letter-spacing:.1em; }
+  .filter-group{ padding:16px 18px; border-bottom:1px solid var(--line); }
+  .filter-group:last-of-type{ border-bottom:none; }
+  .filter-group h4{
+    font-family:var(--sans); font-size:12px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--ink-soft); margin-bottom:10px;
+  }
+  .filter-opt{
+    display:flex; align-items:center; gap:9px;
+    padding:6px 0; cursor:pointer; user-select:none;
+    font-size:13.5px; color:var(--ink);
+  }
+  .filter-opt input{
+    appearance:none; width:16px; height:16px; min-width:16px;
+    border:1.5px solid var(--line-strong); border-radius:4px;
+    position:relative; cursor:pointer; background:#fff;
+  }
+  .filter-opt input:checked{ background:var(--total); border-color:var(--total); }
+  .filter-opt input:checked::after{
+    content:''; position:absolute; left:4px; top:1px; width:4px; height:8px;
+    border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg);
+  }
+  .filter-opt span{ line-height:1.3; }
+  .filter-reset{
+    display:block; width:100%; text-align:left;
+    background:var(--paper); border:none; border-top:1px solid var(--line);
+    padding:12px 18px; font-family:var(--sans); font-size:12.5px; font-weight:600;
+    color:var(--ink-soft); cursor:pointer;
+  }
+  .filter-reset:hover{ color:var(--ink); background:var(--total-soft); }
+
+  /* ===== MAIN CONTENT ===== */
+  .main{ display:flex; flex-direction:column; gap:44px; padding-top:32px; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
+  .section-head > div{ position:relative; padding-left:0px; }
+  .section-head h2{ font-size:21px; }
+  .section-head .num-mark{ position:absolute; left:-16px; top:3px; font-family:var(--serif); color:var(--ink-faint); font-size:14px; }
+.section-desc{ font-size:13.5px; color:var(--ink-soft); margin-top:4px; max-width:640px; line-height:1.5; }
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l);
+    box-shadow:var(--shadow); padding:22px 24px;
+  }
+  .active-filter-note{
+    font-size:12.5px; color:var(--ink-faint); margin-top:2px;
+  }
+  .active-filter-note b{ color:var(--ink-soft); font-weight:700; }
+
+  /* ===== DYNAMICS ===== */
+  .legend-toggles{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .legend-btn{
+    display:flex; align-items:center; gap:7px;
+    border:1.5px solid var(--line); background:var(--surface);
+    border-radius:20px; padding:6px 12px 6px 10px; cursor:pointer;
+    font-family:var(--sans); font-size:12.5px; font-weight:600; color:var(--ink-soft);
+    transition:opacity .15s;
+  }
+  .legend-btn .sw{ width:10px; height:10px; border-radius:3px; }
+  .legend-btn.off{ opacity:.35; }
+  .chart-wrap{ position:relative; height:340px; }
+  .mini-chart-wrap{ position:relative; height:220px; }
+  .growth-chart-wrap{ position:relative; height:280px; }
+
+  /* ===== STRUCTURE (normalized bars) ===== */
+  .structure-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .structure-grid .card h3{ font-size:15.5px; margin-bottom:2px; }
+  .structure-grid .card .section-desc{ margin-bottom:14px; }
+  .mini-legend{ display:flex; gap:14px; flex-wrap:wrap; margin-top:14px; }
+  .mini-legend-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft); }
+  .mini-legend-item .sw{ width:10px; height:10px; border-radius:3px; }
+
+  /* ===== GROWTH ===== */
+  .growth-controls{ display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  .metric-select{
+    font-family:var(--sans); font-weight:700; font-size:13px; color:var(--ink);
+    border:1.5px solid var(--line-strong); border-radius:8px; padding:8px 12px;
+    background:var(--surface); cursor:pointer;
+  }
+  .growth-layout{ display:grid; grid-template-columns:1.1fr .9fr; gap:20px; align-items:start; }
+  table.growth-table{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.growth-table th{
+    text-align:right; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    color:var(--ink-faint); font-weight:700; padding:0 0 8px; border-bottom:1.5px solid var(--line-strong);
+  }
+  table.growth-table th:first-child, table.growth-table td:first-child{ text-align:left; }
+  table.growth-table td{ padding:8px 0; border-bottom:1px solid var(--line); text-align:right; }
+  table.growth-table td.pos{ color:var(--pos); font-weight:700; }
+  table.growth-table td.neg{ color:var(--neg); font-weight:700; }
+  table.growth-table tr:last-child td{ border-bottom:none; }
+
+  /* ===== EXTRA METRICS ===== */
+  .extra-metric-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--neutral-soft); color:var(--ink);
+    border-radius:20px; padding:7px 14px 7px 12px;
+    font-size:13px; font-weight:700; margin-bottom:16px;
+  }
+  .extra-metric-badge .sw{ width:9px; height:9px; border-radius:50%; }
+  .extra-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .extra-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m);
+    padding:16px 16px 14px; box-shadow:var(--shadow);
+  }
+  .extra-card .l{ font-size:11.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin-bottom:8px; }
+  .extra-card .v{ font-family:var(--serif); font-size:22px; font-weight:700; }
+  .extra-card .v.pos{ color:var(--pos); }
+  .extra-card .v.neg{ color:var(--neg); }
+  .extra-card .s{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+
+  footer.site-footer{
+    max-width:1280px; margin:0 auto; padding:0 32px 48px;
+    color:var(--ink-faint); font-size:12px; line-height:1.6;
+  }
+
+  @media (max-width: 980px){
+    .dashboard{ grid-template-columns:1fr; }
+    .filters{ position:static; }
+    .stat-cards{ grid-template-columns:1fr 1fr; }
+    .structure-grid{ grid-template-columns:1fr; }
+    .growth-layout{ grid-template-columns:1fr; }
+    .extra-grid{ grid-template-columns:1fr 1fr; }
+    .hero{ padding:28px 18px 0; }
+    .dashboard{ padding:0 18px 48px; }
+  }
+  @media (max-width: 560px){
+    .stat-cards{ grid-template-columns:1fr; }
+    .extra-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div>
+        <p class="eyebrow">Санкт-Петербург · СПО · 2019–2026</p>
+        <h1 class="hero-title">Численность студентов в организациях среднего профессионального образования (СПО) г. Санкт-Петербург</h1>
+<!--        <p class="hero-sub">Динамика численности студентов государственных и негосударственных организаций СПО Санкт-Петербурга: формы обучения, программы подготовки, источники финансирования.</p>-->
+      </div>
+    </div>
+
+    <div class="stat-cards" id="stat-cards"><!-- заполняется JS --></div>
+  </div>
+</header>
+
+<div class="dashboard">
+  <aside class="filters" id="filters">
+    <div class="filters-index">
+      <span class="idx-label">Фильтры</span>
+      <span class="idx-num">01</span>
+    </div>
+    <div class="filter-group" data-group="institution">
+      <h4>Тип учреждения</h4>
+      <div class="opts"></div>
+    </div>
+    <div class="filter-group" data-group="form">
+      <h4>Форма обучения</h4>
+      <div class="opts"></div>
+    </div>
+    <div class="filter-group" data-group="program">
+      <h4>Программа подготовки</h4>
+      <div class="opts"></div>
+    </div>
+    <button class="filter-reset" id="filter-reset">Сбросить фильтры</button>
+  </aside>
+
+  <main class="main" id="main-content">
+
+    <section id="sec-dynamics">
+      <div class="section-head">
+        <div>
+          <h2><span class="num-mark">02</span>Динамика численности обучающихся</h2>
+          <p class="section-desc">Изменение числа студентов по годам.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="legend-toggles" id="legend-toggles"></div>
+        <div class="chart-wrap"><canvas id="dynamicsChart"></canvas></div>
+        <p class="active-filter-note" id="filter-note-1"></p>
+      </div>
+    </section>
+
+    <section id="sec-structure">
+      <div class="section-head">
+        <div>
+          <h2><span class="num-mark">03</span>Распределение студентов по годам</h2>
+          <p class="section-desc">Доли внутри контингента: источник финансирования и форма обучения.</p>
+        </div>
+      </div>
+      <div class="structure-grid">
+        <div class="card">
+          <h3>Бюджет / договор</h3>
+          <p class="section-desc">Доля студентов, обучающихся за счёт бюджета и по договорам об оказании платных услуг.</p>
+          <div class="mini-chart-wrap"><canvas id="budgetChart"></canvas></div>
+          <div class="mini-legend">
+            <div class="mini-legend-item"><span class="sw" style="background:var(--budget)"></span>Бюджет</div>
+            <div class="mini-legend-item"><span class="sw" style="background:var(--contract)"></span>Договор</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Форма обучения</h3>
+          <p class="section-desc">Доля студентов очной, очно-заочной и заочной форм обучения.</p>
+          <div class="mini-chart-wrap"><canvas id="formChart"></canvas></div>
+          <div class="mini-legend">
+            <div class="mini-legend-item"><span class="sw" style="background:var(--total)"></span>Очная</div>
+            <div class="mini-legend-item"><span class="sw" style="background:var(--target)"></span>Очно-заочная</div>
+            <div class="mini-legend-item"><span class="sw" style="background:var(--neutral)"></span>Заочная</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-growth">
+      <div class="section-head">
+        <div>
+          <h2><span class="num-mark">04</span>Темпы роста показателей по годам</h2>
+          <p class="section-desc">Прирост показателя год к году, в абсолютных числах и в процентах.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="growth-controls">
+          <span class="eyebrow" style="text-transform:none;letter-spacing:0;font-size:12.5px;">Показатель:</span>
+          <select class="metric-select" id="metric-select">
+            <option value="total">Итого студентов</option>
+            <option value="budget">Бюджет</option>
+            <option value="contract">Договор</option>
+            <option value="target">Целевое обучение</option>
+          </select>
+        </div>
+        <div class="growth-layout">
+          <div class="growth-chart-wrap"><canvas id="growthChart"></canvas></div>
+          <div>
+            <table class="growth-table" id="growth-table">
+              <thead>
+                <tr><th>Год</th><th>Значение, чел.</th><th>Прирост, чел.</th><th>Темп, %</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-extra">
+      <div class="section-head">
+        <div>
+          <h2><span class="num-mark">05</span>Сводные характеристики динамики показателя за весь период</h2>
+<!--          <p class="section-desc"> 2019–2026.</p>-->
+        </div>
+      </div>
+      <div class="extra-metric-badge" id="extra-metric-badge"></div>
+      <div class="extra-grid" id="extra-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  Дашборд построен по данным мониторинга контингента СПО Санкт-Петербурга, 2019/20–2025/26 уч. годы. Карточки в шапке отражают показатели по всем учреждениям без учёта фильтров слева.
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
