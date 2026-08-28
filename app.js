@@ -87,7 +87,7 @@
     statCard('Всего студентов', 'var(--total)', AGG_ALL.total[N-1], 'на всех курсах, все учреждения', AGG_ALL.total[0], AGG_ALL.total[N-1]) +
     statCard('Заключили договор о целевом обучении', 'var(--target)', AGG_ALL.target[N-1], 'человек', AGG_ALL.target[0], AGG_ALL.target[N-1]) +
     statCard('За счет бюджетных ассигнований', 'var(--budget)', AGG_ALL.budget[N-1], fmt1(AGG_ALL.budget[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.budget[0], AGG_ALL.budget[N-1]) +
-    statCard('По договорам об оказании платных образова-тельных услуг', 'var(--contract)', AGG_ALL.contract[N-1], fmt1(AGG_ALL.contract[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.contract[0], AGG_ALL.contract[N-1]);
+    statCard('По договорам об оказании платных образовательных услуг', 'var(--contract)', AGG_ALL.contract[N-1], fmt1(AGG_ALL.contract[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.contract[0], AGG_ALL.contract[N-1]);
 
   
   if (typeof Chart === 'undefined') {
