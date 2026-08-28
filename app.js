@@ -2,7 +2,7 @@
   "use strict";
 
   const RAW = SPO_DATA;
-  const YEARS = RAW.years;               // ["2019-2020", ... "2025-2026"]
+  const YEARS = RAW.years;               
   // const YEARS_SHORT = YEARS.map(y => "'" + y.slice(2,4) + '/' + y.slice(7,9));
   const YEARS_SHORT = YEARS
   const ROWS = RAW.rows;
@@ -66,12 +66,8 @@
     );
   }
 
-  const AGG_ALL = aggregateAll(ROWS); // fixed, for header cards
+  const AGG_ALL = aggregateAll(ROWS);
 
-  // ---------- Header meta ----------
-  // (блок с типами учреждений/годами/программами убран из шапки по запросу)
-
-  // ---------- Stat cards (fixed, unfiltered) ----------
   function deltaHtml(first, last){
     const d = first === 0 ? 0 : (last-first)/first*100;
     const cls = d >= 0 ? 'up' : 'down';
@@ -93,7 +89,7 @@
     statCard('За счет бюджетных ассигнований', 'var(--budget)', AGG_ALL.budget[N-1], fmt1(AGG_ALL.budget[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.budget[0], AGG_ALL.budget[N-1]) +
     statCard('По договорам об оказании платных образова-тельных услуг', 'var(--contract)', AGG_ALL.contract[N-1], fmt1(AGG_ALL.contract[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.contract[0], AGG_ALL.contract[N-1]);
 
-  // ---------- Guard: Chart.js must be loaded before building charts ----------
+  
   if (typeof Chart === 'undefined') {
     document.getElementById('main-content').innerHTML =
       '<div class="card" style="border-color:#B2402A;"><h2 style="color:#B2402A;">Графики не загрузились</h2>' +
@@ -102,7 +98,7 @@
     return;
   }
 
-  // ---------- Filters UI ----------
+  
   function buildFilterGroup(groupKey, values, labelMap){
     const container = document.querySelector(`.filter-group[data-group="${groupKey}"] .opts`);
     container.innerHTML = values.map(v => `
@@ -122,7 +118,7 @@
     const group = cb.dataset.group;
     const checkedInGroup = [...document.querySelectorAll(`input[data-group="${group}"]:checked`)];
     if(checkedInGroup.length === 0){
-      // не даём снять последний чекбокс группы
+      
       cb.checked = true;
       return;
     }
@@ -147,7 +143,7 @@
     return 'Активные фильтры: <b>' + parts.join(' · ') + '</b>';
   }
 
-  // ---------- Charts ----------
+  // ---------- Графики ----------
   const CHART_FONT = { family: "'Times New Roman', Times, serif", size: 12 };
   Chart.defaults.font.family = CHART_FONT.family;
   Chart.defaults.color = '#565F82';
@@ -311,7 +307,7 @@
     };
   }
 
-  // ---------- Growth ----------
+  
   const METRIC_LABELS = { total:'Всего студентов', budget:'Бюджет', contract:'Договор', target:'Целевое обучение' };
   let currentMetric = 'total';
 
@@ -375,7 +371,7 @@
     updateGrowth();
   });
 
-  // ---------- Extra metrics ----------
+  
   function updateExtraMetrics(agg, key){
     const vals = agg[key];
     const first = vals[0], last = vals[N-1];
@@ -418,7 +414,7 @@
       `<span class="sw" style="background:${SERIES_META[key].color}"></span>Показатель: ${METRIC_LABELS[key]}`;
   }
 
-  // ---------- Render all ----------
+  
   function renderAll(){
     updateDynamicsChart();
     updateBudgetChart();
