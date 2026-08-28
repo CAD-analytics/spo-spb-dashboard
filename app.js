@@ -398,12 +398,12 @@
     });
 
     const cards = [
-      { l:'Абсолютный прирост', v:(absGrowth>=0?'+':'')+fmt(absGrowth), s:`${YEARS[0]} → ${YEARS[N-1]}`, cls: absGrowth>=0?'pos':'neg' },
-      { l:'Относительный прирост', v:pct(relGrowth), s:'за весь период', cls: relGrowth>=0?'pos':'neg' },
-      { l:'Среднегодовой темп роста', v:pct(cagr), s:'CAGR, 2019–2026', cls: cagr>=0?'pos':'neg' },
-      { l:'Максимум', v:fmt(maxV), s:YEARS[maxI], cls:'' },
-      { l:'Минимум', v:fmt(minV), s:YEARS[minI], cls:'' },
-      { l:'Год макс. роста', v: maxRateI>=0 ? pct(maxRate) : '—', s: maxRateI>=0 ? YEARS[maxRateI+1] : 'нет данных', cls:'pos' }
+      { l:'Абсолютный прирост, чел.', v:(absGrowth>=0?'+':'')+fmt(absGrowth), s:'за весь период', cls: absGrowth>=0?'pos':'neg' },
+      { l:'Относительный прирост, %', v:pct(relGrowth), s:'за весь период', cls: relGrowth>=0?'pos':'neg' },
+      { l:'Среднегодовой темп роста, %', v:pct(cagr), s:'за весь период', cls: cagr>=0?'pos':'neg' },
+      { l:'Максимальное значение, чел.', v:fmt(maxV), s:YEARS[maxI], cls:'' },
+      { l:'Минимальное значение, чел.', v:fmt(minV), s:YEARS[minI], cls:'' },
+      { l:'Максимальный рост за год, %', v: maxRateI>=0 ? pct(maxRate) : '—', s: maxRateI>=0 ? YEARS[maxRateI+1] : 'нет данных', cls:'pos' }
     ];
     document.getElementById('extra-grid').innerHTML = cards.map(c=>`
       <div class="extra-card">
