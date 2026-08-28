@@ -3,7 +3,8 @@
 
   const RAW = SPO_DATA;
   const YEARS = RAW.years;               // ["2019-2020", ... "2025-2026"]
-  const YEARS_SHORT = YEARS.map(y => "'" + y.slice(2,4) + '/' + y.slice(7,9));
+  // const YEARS_SHORT = YEARS.map(y => "'" + y.slice(2,4) + '/' + y.slice(7,9));
+  const YEARS_SHORT = YEARS
   const ROWS = RAW.rows;
   const N = YEARS.length;
 
