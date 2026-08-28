@@ -57,7 +57,6 @@
     color:var(--ink-faint); font-weight:700; font-family:var(--sans);
   }
 
-  /* ===== HEADER / HERO ===== */
   .hero{
     position:relative;
     background:
@@ -103,7 +102,7 @@
   .delta.down{ color:var(--neg); background:#FBE7E3; }
   .stat-card .period{ font-size:11px; color:var(--ink-faint); margin-top:8px; }
 
-  /* ===== LAYOUT ===== */
+  /* ===== Макет ===== */
   .dashboard{
     max-width:1280px; margin:0 auto;
     padding:0 32px 64px;
@@ -113,7 +112,7 @@
     align-items:start;
   }
 
-  /* ===== SIDEBAR / FILTERS ===== */
+  /* ===== Фильтр ===== */
   .filters{
     position:sticky; top:20px;
     background:var(--surface);
@@ -161,7 +160,7 @@
   }
   .filter-reset:hover{ color:var(--ink); background:var(--total-soft); }
 
-  /* ===== MAIN CONTENT ===== */
+  /* ===== MAIN ===== */
   .main{ display:flex; flex-direction:column; gap:44px; padding-top:32px; }
   .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:16px; flex-wrap:wrap; }
   .section-head > div{ position:relative; padding-left:0px; }
@@ -177,7 +176,7 @@
   }
   .active-filter-note b{ color:var(--ink-soft); font-weight:700; }
 
-  /* ===== DYNAMICS ===== */
+  
   .legend-toggles{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
   .legend-btn{
     display:flex; align-items:center; gap:7px;
@@ -192,7 +191,7 @@
   .mini-chart-wrap{ position:relative; height:220px; }
   .growth-chart-wrap{ position:relative; height:280px; }
 
-  /* ===== STRUCTURE (normalized bars) ===== */
+  
   .structure-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
   .structure-grid .card h3{ font-size:15.5px; margin-bottom:2px; }
   .structure-grid .card .section-desc{ margin-bottom:14px; }
@@ -200,7 +199,7 @@
   .mini-legend-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft); }
   .mini-legend-item .sw{ width:10px; height:10px; border-radius:3px; }
 
-  /* ===== GROWTH ===== */
+  
   .growth-controls{ display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
   .metric-select{
     font-family:var(--sans); font-weight:700; font-size:13px; color:var(--ink);
@@ -219,7 +218,7 @@
   table.growth-table td.neg{ color:var(--neg); font-weight:700; }
   table.growth-table tr:last-child td{ border-bottom:none; }
 
-  /* ===== EXTRA METRICS ===== */
+  
   .extra-metric-badge{
     display:inline-flex; align-items:center; gap:8px;
     background:var(--neutral-soft); color:var(--ink);
@@ -271,7 +270,7 @@
       </div>
     </div>
 
-    <div class="stat-cards" id="stat-cards"><!-- заполняется JS --></div>
+    <div class="stat-cards" id="stat-cards"></div>
   </div>
 </header>
 
@@ -377,7 +376,6 @@
       <div class="section-head">
         <div>
           <h2><span class="num-mark">05</span>Сводные характеристики динамики показателя за весь период</h2>
-<!--          <p class="section-desc"> 2019–2026.</p>-->
         </div>
       </div>
       <div class="extra-metric-badge" id="extra-metric-badge"></div>
