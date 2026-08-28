@@ -87,8 +87,8 @@
     </div>`;
   }
   document.getElementById('stat-cards').innerHTML =
-    statCard('Итого студентов', 'var(--total)', AGG_ALL.total[N-1], 'на всех курсах, все учреждения', AGG_ALL.total[0], AGG_ALL.total[N-1]) +
-    statCard('Заключили договор о целевом обучении', 'var(--target)', AGG_ALL.target[N-1], 'студентов', AGG_ALL.target[0], AGG_ALL.target[N-1]) +
+    statCard('Всего студентов', 'var(--total)', AGG_ALL.total[N-1], 'на всех курсах, все учреждения', AGG_ALL.total[0], AGG_ALL.total[N-1]) +
+    statCard('Заключили договор о целевом обучении', 'var(--target)', AGG_ALL.target[N-1], 'человек', AGG_ALL.target[0], AGG_ALL.target[N-1]) +
     statCard('За счет бюджетных ассигнований', 'var(--budget)', AGG_ALL.budget[N-1], fmt1(AGG_ALL.budget[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.budget[0], AGG_ALL.budget[N-1]) +
     statCard('По договорам об оказании платных образова-тельных услуг', 'var(--contract)', AGG_ALL.contract[N-1], fmt1(AGG_ALL.contract[N-1]/AGG_ALL.total[N-1]*100)+'% от контингента', AGG_ALL.contract[0], AGG_ALL.contract[N-1]);
 
@@ -155,7 +155,7 @@
   let dynamicsChart, budgetChart, formChart, growthChart;
   const seriesVisible = { total:true, budget:true, contract:true, target:true };
   const SERIES_META = {
-    total:    {label:'Итого студентов', color:'#2A3F7C'},
+    total:    {label:'Всего студентов', color:'#2A3F7C'},
     budget:   {label:'Бюджет', color:'#B8790C'},
     contract: {label:'Договор', color:'#106B66'},
     target:   {label:'Целевое обучение', color:'#8A3260'}
@@ -311,7 +311,7 @@
   }
 
   // ---------- Growth ----------
-  const METRIC_LABELS = { total:'Итого студентов', budget:'Бюджет', contract:'Договор', target:'Целевое обучение' };
+  const METRIC_LABELS = { total:'Всего студентов', budget:'Бюджет', contract:'Договор', target:'Целевое обучение' };
   let currentMetric = 'total';
 
   function computeGrowth(agg, key){
